@@ -8,6 +8,7 @@ const showInputError = (formElement, inputElement, errorMessage, settings) => {
 const hideInputError = (formElement, inputElement, settings) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.remove(settings.inputErrorClass);
+  inputElement.setCustomValidity('');
   errorElement.classList.remove(settings.errorClass);
   errorElement.textContent = '';
 };
@@ -56,9 +57,6 @@ const setEventListeners = (formElement, settings) => {
 export const enableValidation = (settings) => {
   const formList = Array.from(document.querySelectorAll(settings.formSelector));
   formList.forEach((formElement) => {
-    formElement.addEventListener('submit', (evt) => {
-      evt.preventDefault();
-    });
     setEventListeners(formElement, settings);
   });
 };
@@ -66,8 +64,8 @@ export const enableValidation = (settings) => {
 export const clearValidation = (formElement, validationConfig) => {
   const inputList = Array.from(formElement.querySelectorAll(validationConfig.inputSelector));
   const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
-  buttonElement.classList.add(validationConfig.inactiveButtonClass);
   inputList.forEach((inputElement) => {
     hideInputError(formElement, inputElement, validationConfig)
   });
+  toggleButtonState(inputList, buttonElement, validationConfig);
 };

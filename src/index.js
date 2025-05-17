@@ -23,7 +23,7 @@ const cardUrlInput = popupNewCard.querySelector('.popup__input_type_url')
 const popupOpenImage = document.querySelector('.popup_type_image');
 const popupImage = popupOpenImage.querySelector('.popup__image');
 const imageText = popupOpenImage.querySelector('.popup__caption');
-const AvatarUrlInput = popupAvatarEdit.querySelector('.popup__input_type_url')
+const avatarUrlInput = popupAvatarEdit.querySelector('.popup__input_type_url')
 const profileImageElement = document.querySelector('.profile__image');
 const profileTitleElement = document.querySelector('.profile__title');
 const profileDescriptionElement = document.querySelector('.profile__description');
@@ -41,23 +41,22 @@ let userId = null;
 
 function handleEditProfileFormSubmit(evt) {
   evt.preventDefault(); 
-  renderLoading(true, formAvatarEditElement);
+  renderLoading(true, formProfileEditElement);
   updateUserDataApi(nameInput.value, jobInput.value)
     .then((res) => {
       profileTitle.textContent = nameInput.value;
       profileJob.textContent = jobInput.value;
       closeModal(popupProfileEdit);
-      clearValidation(popupProfileEdit, validationConfig);
     })
     .catch((error) => console.log(error))
     .finally(() => {
-      renderLoading(false, formAvatarEditElement);
+      renderLoading(false, formProfileEditElement);
     });
 }
 
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
-  renderLoading(true, formAvatarEditElement); 
+  renderLoading(true, formNewCardElement); 
   const newCard = {
     name: cardNameInput.value,
     link: cardUrlInput.value,
@@ -70,25 +69,23 @@ function handleAddCardFormSubmit(evt) {
     .then((post) => {
       newCard._id = post._id;
       placesList.prepend(createCard(newCard, removeCard, openImage, likeCard, userId));
+      closeModal(popupNewCard);
     })
+    .catch((error) => console.log(error))
     .finally(() => {
-      renderLoading(false, formAvatarEditElement);
+      renderLoading(false, formNewCardElement);
     });
-  closeModal(popupNewCard);
-  formNewCardElement.reset();
-  clearValidation(popupNewCard, validationConfig)
 }
 
 function handleAvatarEditFormSubmit(evt) {
   evt.preventDefault();
   renderLoading(true, formAvatarEditElement);
-  updateAvatarApi(AvatarUrlInput.value)
+  updateAvatarApi(avatarUrlInput.value)
     .then((res) => {
       profileImageElement.style.backgroundImage = `url(${res.avatar})`;
       closeModal(popupAvatarEdit);
-      formAvatarEditElement.reset();
-      clearValidation(popupAvatarEdit, validationConfig)
     })
+    .catch((error) => console.log(error))
     .finally(() => {
       renderLoading(false, formAvatarEditElement);
     });
@@ -123,32 +120,37 @@ Promise.all([getUserDataApi(), getInitialCardsApi()])
       placesList.append(createCard(element, removeCard, openImage, likeCard, userId));
     });
   })
+  .catch((error) => console.log(error));
 
 modals.forEach((modal) => {
   modal.classList.add('popup_is-animated');
   modal.querySelector('.popup__close').addEventListener('click', () => {
     closeModal(modal);
-    clearValidation(modal, validationConfig)
   })
   modal.addEventListener('mousedown', (event) => {
     if(event.target.classList.contains('popup')) {
       closeModal(modal);
-      clearValidation(modal, validationConfig)
     }
   })
 })
 
 popupProfileEditOpen.addEventListener('click', function() {
+  formProfileEditElement.reset();
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileJob.textContent;
+  clearValidation(formProfileEditElement, validationConfig);
   openModal(popupProfileEdit);
 });
 
 profileImageElement.addEventListener('click', function() {
+  formAvatarEditElement.reset();
+  clearValidation(formAvatarEditElement, validationConfig);
   openModal(popupAvatarEdit);
 });
 
 popupNewCardOpen.addEventListener('click', function() {
+  formNewCardElement.reset();
+  clearValidation(formNewCardElement, validationConfig);
   openModal(popupNewCard);
 });
 

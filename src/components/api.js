@@ -6,18 +6,19 @@ const config = {
   }
 }
 
+function getResponseData(res) {
+  if (!res.ok) {
+      return Promise.reject(`Ошибка: ${res.status}`); 
+  }
+  return res.json();
+}
+
 export const getUserDataApi = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     method: 'GET',
     headers: config.headers
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json()
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
-  .catch((error) => console.log(error));
+  .then(getResponseData);
 }
 
 export const getInitialCardsApi = () => {
@@ -25,13 +26,7 @@ export const getInitialCardsApi = () => {
     method: 'GET',
     headers: config.headers
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json()
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
-  .catch((error) => console.log(error));
+  .then(getResponseData);
 }
 
 export const updateUserDataApi = (nameInput, jobInput) => {
@@ -43,13 +38,7 @@ export const updateUserDataApi = (nameInput, jobInput) => {
       about: jobInput
     })
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json()
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
-  .catch((error) => console.log(error));
+  .then(getResponseData);
 }
 
 export const addNewCardsApi = (nameInput, cardUrlInput) => {
@@ -61,13 +50,7 @@ export const addNewCardsApi = (nameInput, cardUrlInput) => {
       link: cardUrlInput
     })
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json()
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
-  .catch((error) => console.log(error));
+  .then(getResponseData);
 }
 
 export const deleteCardsApi = (cardId) => {
@@ -75,13 +58,7 @@ export const deleteCardsApi = (cardId) => {
     method: 'DELETE',
     headers: config.headers
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json()
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
-  .catch((error) => console.log(error));
+  .then(getResponseData);
 }
 
 export const likeCardApi = (cardId, isLiked) => {
@@ -89,13 +66,7 @@ export const likeCardApi = (cardId, isLiked) => {
     method: isLiked ? 'DELETE' : 'PUT',
     headers: config.headers
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json()
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
-  .catch((error) => console.log(error));
+  .then(getResponseData);
 }
 
 export const updateAvatarApi = (avatar) => {
@@ -106,11 +77,5 @@ export const updateAvatarApi = (avatar) => {
       avatar: avatar,
     })
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json()
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
-  .catch((error) => console.log(error));
+  .then(getResponseData);
 }
