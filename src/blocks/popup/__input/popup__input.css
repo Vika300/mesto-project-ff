@@ -20,3 +20,11 @@
     line-height: 15px;
   }
 }
+
+.popup__input:focus {
+  outline: none;
+}
+
+.popup__input:focus-visible {
+  border: 2px solid #007DFF;;
+}
